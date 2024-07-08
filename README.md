@@ -22,6 +22,7 @@
 **Spring Security 기본 이해**
 
 - [ ]  Filter란 무엇인가?(with Interceptor, AOP)
+      Filter란
 - [ ]  Spring Security란?
 
 **JWT 기본 이해**
