@@ -43,6 +43,8 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    testImplementation("org.mockito:mockito-core") // test 위한 Mockito
+
     // Springdoc OpenAPI UI
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 

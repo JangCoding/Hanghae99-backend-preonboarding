@@ -1,6 +1,6 @@
 package com.hanghae99.preonboardingbackend.config.jwt;
 
-import com.hanghae99.preonboardingbackend.entity.UserRoleEnum;
+import com.hanghae99.preonboardingbackend.model.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -57,6 +57,10 @@ public class TokenProvider implements InitializingBean {
 
     // JWT 생성
     public String createToken(String username, UserRoleEnum role) {
+        if (username == null || role == null) {
+            throw new IllegalArgumentException("Username and role must not be null");
+        }
+
         Date date = new Date();
 
                 // "Bearer " 값을 앞에 붙임
