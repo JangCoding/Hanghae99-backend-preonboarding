@@ -1,34 +1,36 @@
-package com.hanghae99.preonboardingbackend.auth;
+package com.hanghae99.preonboardingbackend.controller;
 
 
+import com.hanghae99.preonboardingbackend.Service.AuthService;
 import com.hanghae99.preonboardingbackend.config.jwt.TokenProvider;
-import com.hanghae99.preonboardingbackend.entity.UserRoleEnum;
+import com.hanghae99.preonboardingbackend.dto.CreateJwtRequest;
+import com.hanghae99.preonboardingbackend.model.entity.Authority;
+import com.hanghae99.preonboardingbackend.model.entity.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class AuthController {
 
     private final TokenProvider jwtUtil;
+    private final AuthService authService;
 
-    public AuthController(TokenProvider jwtUtil) { // 생성자 주입. jwtUtil 생성
+    @Autowired
+    public AuthController(TokenProvider jwtUtil, AuthService authService)
+    { // 생성자 주입. jwtUtil 생성
         this.jwtUtil = jwtUtil;
+        this.authService = authService;
     }
 
-    @GetMapping("/create-jwt")
-    public String createJwt(HttpServletResponse res) {
-        // Jwt 생성
-        String token = jwtUtil.createToken("Robbie", UserRoleEnum.USER);
+    @PostMapping("/create-jwt")
+    public String createJwt(
+            HttpServletResponse res,
+            @RequestBody CreateJwtRequest createJwtRequest ) {
 
-        // Jwt 쿠키 저장
-        jwtUtil.addJwtToCookie(token, res);
-
-        return "createJwt : " + token;
+        return authService.createJwt(res, createJwtRequest);
     }
 
     @GetMapping("/get-jwt")
@@ -52,6 +54,12 @@ public class AuthController {
 
         return "getJwt : " + username + ", " + authority;
     }
+
+    @PostMapping("/create-auth")
+    public Authority createAuthority(@RequestParam UserRoleEnum role) {
+        return authService.createAuthority(role);
+    }
+
 }
 
 

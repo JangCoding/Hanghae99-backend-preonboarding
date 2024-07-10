@@ -1,4 +1,4 @@
-package com.hanghae99.preonboardingbackend.entity;
+package com.hanghae99.preonboardingbackend.model.entity;
 
 public enum UserRoleEnum {
     USER(Authority.USER),  // 사용자 권한

@@ -34,8 +34,13 @@ public class User {
     @JsonIgnore
     private boolean activated;
 
+    @Column(name = "role")
+    @JsonIgnore
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
     @ManyToMany
-    @JoinTable(
+    @JoinTable(     // user 가 여러 권한을 가질 수 있도록 함. JoinTable 로 새 테이블 만들어 유저와 권한 관계 만듦.
         name = "user_authority",
         joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
         inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
