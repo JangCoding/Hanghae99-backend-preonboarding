@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final TokenProvider jwtUtil;
+    private final TokenProvider tokenProvider;
     private final AuthService authService;
 
     @Autowired
-    public AuthController(TokenProvider jwtUtil, AuthService authService)
+    public AuthController(TokenProvider tokenProvider, AuthService authService)
     { // 생성자 주입. jwtUtil 생성
-        this.jwtUtil = jwtUtil;
+        this.tokenProvider = tokenProvider;
         this.authService = authService;
     }
 
@@ -36,15 +36,13 @@ public class AuthController {
     @GetMapping("/get-jwt")
     public String getJwt(@CookieValue(TokenProvider.AUTHORIZATION_HEADER) String tokenValue) {
         // JWT 토큰 substring.
-        String token = jwtUtil.substringToken(tokenValue);
+        String token = tokenProvider.substringToken(tokenValue);
 
         // 토큰 검증
-        if(!jwtUtil.validateToken(token)){
-            throw new IllegalArgumentException("Token Error");
-        }
+        tokenProvider.validateToken(token);
 
         // 토큰에서 사용자 정보 가져오기
-        Claims info = jwtUtil.getUserInfoFromToken(token);
+        Claims info = tokenProvider.getUserInfoFromToken(token);
         // 사용자 username
         String username = info.getSubject();
         System.out.println("username = " + username);
