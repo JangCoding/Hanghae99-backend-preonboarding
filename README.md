@@ -40,6 +40,20 @@
 3. 인터셉터는 스프링의 설정 파일이나 자바 설정을 통해 등록.
 4. 요청 전/후 데이터 가공, 사용자 권한 체크, 특정 컨트롤러에 대한 공통 로직 처리 시 사용
 
+###### 동작과정
+1. 톰캣에 요청 도착 - HTTP요청이 톰캣 서버에 도착하면 처리할 쓰레드를 할당하고, DispatcherServlet 으로 요청 전달
+2. DispatcherServlet - 어떤 컨트롤러에 전달할 지 결정. HandlerMapping 을 통해 요청을 처리할 컨트롤러와 HandlerInterceptor를 찾는다.
+3. HandlerInterceptor - 'preHandle' 메서드가 순차적으로 호출됨.
+   -요청을 가로채어 특정 조건을 검사하거나 필요한 전처리 작업을 수행
+   -인터셉터 체인을 통과하며 모든 'preHandle' 메서드가 'true'를 반환하면 요청 처리가 계속됨.
+   -하나라도 'false'가 반환되면 남은 'preHandle' 메서드와 컨트롤러 메서드 실행을 건너뜀
+4. 컨트롤러 실행
+5. HandelrInterceptor 후처리 - 컨트롤러가 실행을 완료하면 DispatcherServlet 은 다시 HandlerInterceptor 체인의 'postHandle' 메서드를 호출
+   -'postHandle'은 컨트롤러 실행 후 뷰를 렌더링하기 전에 추가적인 작업을 수행함
+6. 뷰 렌더링 및 완료 처리 - 'postHandle' 메서드 실행 후 DispatcherServlet은 뷰를 렌더링하고, 클라이언트에 응답을 전송함.
+   -마지막으로 HandlerInterceptor체인의 'afterCompletion' 메서드를 호출. 리소스 정리 및 예외처리 관련 작업 수행.
+   
+
 ##### AOP
 
 1. AOP는 스프링의 핵심 기능 중 하나로, 핵심 비즈니스 로직과 부가적인 관심사를 분리하여 코드의 모듈화를 향상시킨다.
